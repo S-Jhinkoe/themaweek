@@ -12,6 +12,7 @@ let snakeY = blocksize * 5;
 let velocityX = 0;
 let velocityY = 0;
 
+const snakeBody = [];
 
 //powerup///
 let powerupX;
@@ -32,22 +33,22 @@ window.onload = function() {
 }
 
 function changeDirection(i) {
-if (i.code == "ArrowUp") {
+if (i.code == "ArrowUp" && velocityY != 1) {
     velocityX = 0;
     velocityY = -1;
 }
 
-else if (i.code == "ArrowDown") {
+else if (i.code == "ArrowDown" && velocityY != -1) {
     velocityX = 0;
     velocityY = 1;
 }
 
-else if (i.code == "ArrowLeft") {
+else if (i.code == "ArrowLeft" && velocityX != 1) {
     velocityX = -1;
     velocityY = 0;
 }
 
-else if (i.code == "ArrowRight") {
+else if (i.code == "ArrowRight" && velocityX != -1) {
     velocityX = 1;
     velocityY = 0;
 }
@@ -57,14 +58,30 @@ function update() {
     context.fillStyle = "black";
     context.fillRect(0,0, board.width, board.height);
 
-    context.fillStyle = "lime";
-    snakeX += velocityX;
-    snakeY += velocityY;
-    context.fillRect(snakeX, snakeY, blocksize, blocksize);
-
     context.fillStyle = "red";
     context.fillRect(powerupX, powerupY, blocksize, blocksize);
 
+if(snakeX == powerupX && snakeY == powerupY){
+    snakeBody.push([powerupX, powerupY])
+    placePowerup();
+}
+
+for (let i = snakeBody.length-1; i > 0; i--) {
+    snakeBody[i] = snakeBody[i-1]; 
+}
+if (snakeBody.length) {
+    snakeBody[0] = [snakeX, snakeY];
+}
+
+
+    context.fillStyle = "lime";
+    snakeX += velocityX * blocksize;
+    snakeY += velocityY * blocksize;
+    context.fillRect(snakeX, snakeY, blocksize, blocksize);
+    for (let i = 0; i < snakeBody.length; i++) {
+        context.fillRect(snakeBody[i][0], snakeBody[i][1], blocksize, blocksize)
+        
+    }
 }
 
 function placePowerup() {
