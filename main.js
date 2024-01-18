@@ -18,6 +18,8 @@ const snakeBody = [];
 let powerupX;
 let powerupY;
 
+let gameOver = false;
+
 window.onload = function() {
     board = document.querySelector("#board");
     board.height = rows * blocksize;
@@ -55,6 +57,11 @@ else if (i.code == "ArrowRight" && velocityX != -1) {
 }
 
 function update() {
+
+if (gameOver) {
+    return;
+}
+
     context.fillStyle = "black";
     context.fillRect(0,0, board.width, board.height);
 
@@ -80,8 +87,21 @@ if (snakeBody.length) {
     context.fillRect(snakeX, snakeY, blocksize, blocksize);
     for (let i = 0; i < snakeBody.length; i++) {
         context.fillRect(snakeBody[i][0], snakeBody[i][1], blocksize, blocksize)
-        
     }
+
+    //game over =
+    if (snakeX < 0 || snakeX > cols*blocksize || snakeY < 0 || snakeY > rows*blocksize) {
+        gameOver = true;
+        alert("!!!Game Over!!!")
+    }
+
+for (let i = 0; i < snakeBody.length; i++) {
+    if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) {
+        gameOver = true;
+        alert("!!!Game Over!!!")
+    }
+}
+
 }
 
 function placePowerup() {
